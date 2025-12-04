@@ -4,6 +4,7 @@ export interface ContentPiece {
   title: string;
   content: string;
   hook?: string;
+  template?: string;
   day: number;
   time: string;
   tags?: string[];
@@ -142,6 +143,7 @@ SHOT NOTES:
     id: "tw-1",
     type: "twitter",
     title: "The 5AM Club Debunked",
+    template: "hidden-truth",
     content: `🧵 The 5AM club is a scam. Here's what actually works:
 
 1/ I fell for it too. Woke up at 5am for 6 months. Result? Exhausted, cranky, and no more productive than before.
@@ -165,6 +167,7 @@ Your move: What time are you actually most productive? 👇`,
     id: "tw-2",
     type: "twitter",
     title: "The To-Do List Trap",
+    template: "list",
     content: `🧵 Your to-do list is a productivity trap. Here's how to escape:
 
 1/ Long to-do lists feel productive. They're actually anxiety in list form.
@@ -188,6 +191,7 @@ Try it tomorrow. 3 things. That's it.`,
     id: "tw-3",
     type: "twitter",
     title: "Rest Revolution",
+    template: "list",
     content: `🧵 Rest isn't lazy. It's strategic. Here's the framework:
 
 1/ We treat rest like a reward. "I'll relax AFTER I finish this." That's backwards.

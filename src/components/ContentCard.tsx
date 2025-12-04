@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Copy, Check, Clock, Hash } from "lucide-react";
 import { ContentPiece } from "@/data/mockContent";
 import { cn } from "@/lib/utils";
@@ -43,9 +44,19 @@ const platformConfig = {
   }
 };
 
+const formatTemplate = (template?: string) => {
+  if (!template) return '';
+  return template
+    .split('-')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+};
+
 const ContentCard = ({ content, isExpanded, onToggle }: ContentCardProps) => {
   const [copied, setCopied] = useState(false);
+  const [showFullScript, setShowFullScript] = useState(false);
   const config = platformConfig[content.type];
+  const templateLabel = formatTemplate(content.template);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -55,6 +66,7 @@ const ContentCard = ({ content, isExpanded, onToggle }: ContentCardProps) => {
   };
 
   return (
+    <>
     <Card 
       className={cn(
         "cursor-pointer transition-all duration-300 hover:shadow-lg border",
@@ -72,6 +84,11 @@ const ContentCard = ({ content, isExpanded, onToggle }: ContentCardProps) => {
                 {config.label}
               </Badge>
               <h3 className="font-semibold text-foreground line-clamp-1">{content.title}</h3>
+              {templateLabel && (
+                <Badge variant="outline" className="text-[10px] uppercase tracking-wide opacity-80">
+                  {templateLabel} Template
+                </Badge>
+              )}
             </div>
           </div>
           <Button
@@ -120,8 +137,54 @@ const ContentCard = ({ content, isExpanded, onToggle }: ContentCardProps) => {
         {!isExpanded && (
           <p className="text-xs text-primary mt-2">Click to expand →</p>
         )}
+
+        {content.type === "tiktok" && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-3 w-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowFullScript(true);
+            }}
+          >
+            View Full Script
+          </Button>
+        )}
       </CardContent>
     </Card>
+    {content.type === "tiktok" && (
+      <Dialog open={showFullScript} onOpenChange={setShowFullScript}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{content.title}</DialogTitle>
+            <DialogDescription>
+              Generated TikTok script with beats + shot notes.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="rounded-md bg-muted p-4 max-h-[60vh] overflow-y-auto">
+            <pre className="text-sm whitespace-pre-wrap text-muted-foreground">
+              {content.content}
+            </pre>
+          </div>
+          <div className="flex justify-between gap-2 flex-wrap">
+            <Badge variant="secondary">{content.tags?.slice(0, 3).join(" • ") || 'TikTok Script'}</Badge>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={async () => {
+                await navigator.clipboard.writeText(content.content);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+            >
+              Copy Script
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    )}
+    </>
   );
 };
 
