@@ -72,14 +72,9 @@ const ContentCard = ({ content, isExpanded, onToggle }: ContentCardProps) => {
 
   const openLinkedIn = () => {
     if (content.type !== "linkedin") return;
-    const share =
-      content.shareUrl ||
-      import.meta.env.VITE_LINKEDIN_SHARE_URL ||
-      "";
-    const targetUrl = share
-      ? `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(share)}`
-      : "https://www.linkedin.com/feed/";
-    window.open(targetUrl, "_blank", "noopener,noreferrer");
+    // LinkedIn doesn't support pre-filling post text via URL
+    // Open the feed where users can paste the copied content
+    window.open("https://www.linkedin.com/feed/", "_blank", "noopener,noreferrer");
   };
 
   const getCopyText = () => {
@@ -150,9 +145,10 @@ const ContentCard = ({ content, isExpanded, onToggle }: ContentCardProps) => {
                   setTimeout(() => setCopied(false), 2000);
                   openLinkedIn();
                 }}
+                title="Copies content to clipboard and opens LinkedIn - paste to share"
               >
                 <ExternalLink className="w-3 h-3" />
-                Share on LinkedIn
+                {copied ? "Copied! Paste on LinkedIn" : "Share on LinkedIn"}
               </Button>
             )}
             <Button
