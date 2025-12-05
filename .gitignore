@@ -15,6 +15,9 @@ dist-ssr
 # Environment variables
 .env
 
+# Lock files (using npm only)
+bun.lockb
+
 # Upload directory
 uploads/
 
