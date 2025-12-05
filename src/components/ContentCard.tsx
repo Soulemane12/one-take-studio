@@ -139,8 +139,12 @@ const ContentCard = ({ content, isExpanded, onToggle }: ContentCardProps) => {
                 variant="outline"
                 size="sm"
                 className="shrink-0 gap-1"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
+                  const text = getCopyText();
+                  await navigator.clipboard.writeText(text);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
                   openLinkedIn();
                 }}
               >
